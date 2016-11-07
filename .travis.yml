@@ -2,3 +2,20 @@ language: go
 
 go:
 - 1.6
+
+before_deploy:
+- go get github.com/mitchellh/gox
+- mkdir dist
+- gox
+    -osarch="linux/amd64 linux/386 linux/arm windows/amd64 windows/386 darwin/amd64"
+    -output="dist/{{.Dir}}-{{.OS}}-{{.Arch}}"
+
+deploy:
+  provider: releases
+  api_key:
+    secure: dQGTf0jmn4ncUrEEsOJ26wq1HSplwkc/o6s5SEu3QrFIxxzxO1Rg1uqUUEmJst2r6TDqOwMug/553fZUwagaMpdw4XGxza3tssW42uBBad1nG3H6exLP+dazddN+FERKBlMVqOkn24cWbI8IdMPQpTYrLd89akaxZg8G5fdqAiCpADVTAYx7MeF3upvBEYzh2xBaw7yzvfummxOLdcTuJEM41p1bMahoFdaw+lOxTO275LQBwoGBLr1ZBm73Z9d+LTCtX+f84P/EN0uvdANraE2iFLTDOci7kkCwMKRE9BtrwKPdUrdsS3GatXS3LDxN+m0PAJE9i8mzMEweWG7AIgNTz8O/06HU5suSx498q5egbvmG6bNnpzke7iAAlJftTkz1thvWBM9xUYUhr4DtrRokCB7pdjCRQttsWR4oXyF6mMw64yJyr0cXXlRYR/J+RMl02yhBh6Tcw7DX2+F1aBLUaOPnmZnsLOXQOhS49X4pweGs6Xj0VpuMsd+Rd82wRwQMZk3ubzypnO9GQFrx6CaFAAeDoUD5aEJRDLc/ORgGZsl7jlHvcguJuXs00lmJQ6RrHogzCKlFACDdgMXNNCSagoL5M9gTDqKkUD0R0MtZGFOJuw7BqDkoMMd0V6u9+pYWsYw2Uf39XwzRt+6ER+M8LDzs1ufpT0SZzktJrKM=
+  file: "dist/hello-world-*"
+  file_glob: true
+  skip_cleanup: true
+  on:
+    tags: true
